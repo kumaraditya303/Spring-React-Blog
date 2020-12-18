@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/client"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 5
+  target-branch: dev
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 5
+  target-branch: dev
