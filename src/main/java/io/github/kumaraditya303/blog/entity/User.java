@@ -41,8 +41,8 @@ public class User implements UserDetails {
     private String password;
     @OneToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-    @OneToMany
-    private List<Post> posts;
+    // @OneToMany(fetch = FetchType.EAGER)
+    // private List<Post> posts;
     @AssertTrue
     private Boolean enabled = true;
 
@@ -158,7 +158,7 @@ public class User implements UserDetails {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((posts == null) ? 0 : posts.hashCode());
+        // result = prime * result + ((posts == null) ? 0 : posts.hashCode());
         result = prime * result + ((roles == null) ? 0 : roles.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
@@ -203,11 +203,11 @@ public class User implements UserDetails {
                 return false;
         } else if (!password.equals(other.password))
             return false;
-        if (posts == null) {
-            if (other.posts != null)
-                return false;
-        } else if (!posts.equals(other.posts))
-            return false;
+        // if (posts == null) {
+        //     if (other.posts != null)
+        //         return false;
+        // } else if (!posts.equals(other.posts))
+        //     return false;
         if (roles == null) {
             if (other.roles != null)
                 return false;
@@ -221,18 +221,18 @@ public class User implements UserDetails {
         return true;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
+    // public List<Post> getPosts() {
+    //     return posts;
+    // }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
+    // public void setPosts(List<Post> posts) {
+    //     this.posts = posts;
+    // }
 
     @Override
     public String toString() {
         return "User [email=" + email + ", enabled=" + enabled + ", firstName=" + firstName + ", id=" + id
-                + ", lastName=" + lastName + ", password=" + password + ", posts=" + posts + ", roles=" + roles
+                + ", lastName=" + lastName + ", password=" + password + ", roles=" + roles
                 + ", username=" + username + "]";
     }
 }

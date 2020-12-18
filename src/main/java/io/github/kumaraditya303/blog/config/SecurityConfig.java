@@ -48,12 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "/login", "/register").permitAll()
-                .antMatchers("/h2-console/**").permitAll().antMatchers(HttpMethod.GET, "/", "/static/**").permitAll()
-                .anyRequest().authenticated().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "/api/login", "/api/register")
+                .permitAll().antMatchers("/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/static/**", "/media/**").permitAll().anyRequest().authenticated()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().frameOptions().disable();
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
 }

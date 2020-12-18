@@ -20,7 +20,7 @@ public class ApiResponse {
     }
 
     public void setError(Object key, Object value) {
-        var temp = new HashMap<>();
+        Map<Object, Object> temp = new HashMap<>();
         temp.put(key, value);
         this.data.put("error", temp);
     }
