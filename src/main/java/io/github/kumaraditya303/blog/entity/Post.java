@@ -3,15 +3,18 @@ package io.github.kumaraditya303.blog.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
 
 @Entity
 public class Post implements Serializable {
@@ -19,19 +22,16 @@ public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "*Title cannot be empty.*")
     private String title;
-    @NotBlank(message = "*Overview cannot be empty.*")
     private String overview;
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
-    @NotBlank(message = "*Content cannot be empty.*")
     private String content;
-    @NotBlank(message = "*Featured cannot be empty.*")
     private Boolean featured;
     @ManyToOne(fetch = FetchType.EAGER)
     private User author;
-    private String thumbnail;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private DBFile thumbnail;
 
     public Long getId() {
         return id;
@@ -96,20 +96,16 @@ public class Post implements Serializable {
         return this;
     }
 
+    @JsonGetter(value = "thumbnail")
     public String getThumbnail() {
-        return thumbnail;
+        if (thumbnail != null)
+            return "/static/" + thumbnail.getId();
+        return null;
     }
 
-    public Post setThumbnail(String thumbnail) {
+    public Post setThumbnail(DBFile thumbnail) {
         this.thumbnail = thumbnail;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "Post [author=" + author + ", content=" + content + ", featured=" + featured + ", id=" + id
-                + ", overview=" + overview + ", thumbnail=" + thumbnail + ", timestamp=" + timestamp + ", title="
-                + title + "]";
     }
 
     @Override
@@ -179,6 +175,14 @@ public class Post implements Serializable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Post [author=" + author + ", content=" + content + ", featured=" + featured + ", id=" + id
+                + ", overview=" + overview + ", thumbnail=" + thumbnail + ", timestamp=" + timestamp + ", title="
+                + title + "]";
+    }
+
     public Post() {
     }
+
 }

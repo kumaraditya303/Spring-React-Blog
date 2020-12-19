@@ -14,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,19 +32,19 @@ public class User implements UserDetails {
     private Long id;
     @Size(min = 8, message = "*Username length should not be less than 8.*")
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "*Username cannot be empty.*")
     private String username;
     private String firstName;
     private String lastName;
     @Email(message = "*Email should be valid.*")
+    @NotBlank(message = "*Email cannot be empty.*")
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 8, message = "*Password length should not be less than 8.*")
-    @Column(nullable = false)
+    @NotBlank(message = "*Password cannot be empty.*")
     private String password;
     @OneToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-    // @OneToMany(fetch = FetchType.EAGER)
-    // private List<Post> posts;
     @AssertTrue
     private Boolean enabled = true;
 
@@ -103,6 +105,7 @@ public class User implements UserDetails {
     }
 
     @Override
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         final List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.addAll(
@@ -111,16 +114,19 @@ public class User implements UserDetails {
     }
 
     @Override
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -203,11 +209,7 @@ public class User implements UserDetails {
                 return false;
         } else if (!password.equals(other.password))
             return false;
-        // if (posts == null) {
-        //     if (other.posts != null)
-        //         return false;
-        // } else if (!posts.equals(other.posts))
-        //     return false;
+
         if (roles == null) {
             if (other.roles != null)
                 return false;
@@ -221,18 +223,10 @@ public class User implements UserDetails {
         return true;
     }
 
-    // public List<Post> getPosts() {
-    //     return posts;
-    // }
-
-    // public void setPosts(List<Post> posts) {
-    //     this.posts = posts;
-    // }
-
     @Override
     public String toString() {
         return "User [email=" + email + ", enabled=" + enabled + ", firstName=" + firstName + ", id=" + id
-                + ", lastName=" + lastName + ", password=" + password + ", roles=" + roles
-                + ", username=" + username + "]";
+                + ", lastName=" + lastName + ", password=" + password + ", roles=" + roles + ", username=" + username
+                + "]";
     }
 }

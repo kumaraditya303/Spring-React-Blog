@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +44,7 @@ public class UserControllerTests {
         private Map<Object, Object> user = new HashMap<>();
 
         @BeforeEach
-        public void clearDB() {
+        public void setup() {
                 userRepository.deleteAll();
                 roleRepository.deleteAll();
         }
@@ -126,7 +127,8 @@ public class UserControllerTests {
                 JsonNode response = new ObjectMapper().readTree(mvcResult.getResponse().getContentAsString());
                 String token = response.get("token").asText();
                 this.mockMvc.perform(get("/api/user")).andExpect(status().isForbidden());
-                this.mockMvc.perform(get("/api/user").header("Authorization", "Bearer " + token))
-                                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                this.mockMvc.perform(get("/api/user").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                                .andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
         }
 }

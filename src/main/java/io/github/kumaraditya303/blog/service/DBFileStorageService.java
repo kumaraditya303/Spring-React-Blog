@@ -24,4 +24,8 @@ public class DBFileStorageService {
     public byte[] getFile(String id) {
         return dbFileRepository.findById(id).get().getFile();
     }
+
+    public DBFile getDbFile(String id) {
+        return dbFileRepository.findById(id).get();
+    }
 }
