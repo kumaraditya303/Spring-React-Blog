@@ -1,6 +1,5 @@
 package io.github.kumaraditya303.blog.controller;
 
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 
 import javax.validation.Valid;
@@ -22,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.kumaraditya303.blog.dto.LoginDto;
-import io.github.kumaraditya303.blog.entity.Role;
 import io.github.kumaraditya303.blog.entity.User;
-import io.github.kumaraditya303.blog.repository.RoleRepository;
 import io.github.kumaraditya303.blog.repository.UserRepository;
 import io.github.kumaraditya303.blog.util.ApiResponse;
 import io.github.kumaraditya303.blog.util.JwtUtil;
@@ -35,16 +32,14 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserRepository userRepository,
-            RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -81,12 +76,10 @@ public class UserController {
             return new ResponseEntity<>(response.getData(), HttpStatus.BAD_REQUEST);
         }
         if (!userRepository.existsByUsername(user.getUsername())) {
-            Role role = new Role().setRole("ROLE_USER");
-            roleRepository.save(role);
-            user.setPassword(passwordEncoder.encode(user.getPassword())).setRoles(singletonList(role));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             response.setData("token", jwtUtil.generateToken(user.getUsername()));
-            return new ResponseEntity<>(response.getData(), HttpStatus.CREATED);
+            return new ResponseEntity<>(response.getData(), HttpStatus.OK);
         }
         response.setError("username", "User with username " + user.getUsername() + " already exists.");
         return new ResponseEntity<>(response.getData(), HttpStatus.BAD_REQUEST);

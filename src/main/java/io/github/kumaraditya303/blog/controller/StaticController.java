@@ -22,7 +22,7 @@ public class StaticController {
 
     @GetMapping(value = "/static/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getStatic(@PathVariable String fileName) {
-        return dbFileStorageService.getFile(fileName);
+        return dbFileStorageService.getRawFile(fileName);
     }
 
     @PostMapping("/static")

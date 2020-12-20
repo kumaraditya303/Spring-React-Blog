@@ -16,16 +16,22 @@ public class DBFileStorageService {
     DBFileRepository dbFileRepository;
 
     public DBFile store(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
-        return dbFileRepository.save(dbFile);
+        if (file != null) {
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            DBFile dbFile = new DBFile();
+            dbFile.setFile(file.getBytes());
+            dbFile.setFileName(fileName);
+            dbFile.setFileType(file.getContentType());
+            return dbFileRepository.save(dbFile);
+        }
+        return null;
     }
 
-    public byte[] getFile(String id) {
+    public byte[] getRawFile(String id) {
         return dbFileRepository.findById(id).get().getFile();
     }
 
-    public DBFile getDbFile(String id) {
+    public DBFile getFile(String id) {
         return dbFileRepository.findById(id).get();
     }
 }

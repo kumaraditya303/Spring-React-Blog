@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,13 +25,14 @@ import io.github.kumaraditya303.blog.util.ApiResponse;
 @RestController
 public class PostController {
 
-    @Autowired
-    private DBFileStorageService dbFileStorageService;
+    private final DBFileStorageService dbFileStorageService;
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
-
+    public PostController(DBFileStorageService dbFileStorageService, PostRepository postRepository) {
+        this.dbFileStorageService = dbFileStorageService;
+        this.postRepository = postRepository;
+    }
 
     @PostMapping(value = "/api/post/create")
     public ResponseEntity<Object> createImage(@Valid @RequestBody PostDto postDto, BindingResult result,
@@ -44,11 +44,12 @@ public class PostController {
             return new ResponseEntity<>(response.getData(), HttpStatus.BAD_REQUEST);
         }
         Post post = new Post();
-        post.setTitle(postDto.getTitle()).setOverview(postDto.getOverview()).setContent(postDto.getContent())
-                .setFeatured(postDto.getFeatured()).setAuthor((User) author.getPrincipal())
-                .setThumbnail(dbFileStorageService.getDbFile(postDto.getThumbnail()));
-        postRepository.save(post);
-        return new ResponseEntity<>(post, HttpStatus.OK);
+        post.setTitle(postDto.getTitle());
+        post.setOverview(postDto.getOverview());
+        post.setContent(postDto.getContent());
+        post.setFeatured(postDto.getFeatured());
+        post.setAuthor((User) author.getPrincipal());
+        post.setThumbnail(dbFileStorageService.getFile(postDto.getThumbnail()));
+        return new ResponseEntity<>(postRepository.save(post), HttpStatus.OK);
     }
-
 }

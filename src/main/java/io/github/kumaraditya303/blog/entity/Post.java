@@ -1,6 +1,5 @@
 package io.github.kumaraditya303.blog.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -15,10 +14,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Post implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +28,7 @@ public class Post implements Serializable {
     private String content;
     private Boolean featured;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
     private User author;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DBFile thumbnail;
@@ -37,63 +37,56 @@ public class Post implements Serializable {
         return id;
     }
 
-    public Post setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Post setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public Post setOverview(String overview) {
+    public void setOverview(String overview) {
         this.overview = overview;
-        return this;
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
 
-    public Post setTimestamp(Date timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-        return this;
     }
 
     public String getContent() {
         return content;
     }
 
-    public Post setContent(String content) {
+    public void setContent(String content) {
         this.content = content;
-        return this;
     }
 
     public Boolean getFeatured() {
         return featured;
     }
 
-    public Post setFeatured(Boolean featured) {
+    public void setFeatured(Boolean featured) {
         this.featured = featured;
-        return this;
     }
 
     public User getAuthor() {
         return author;
     }
 
-    public Post setAuthor(User author) {
+    public void setAuthor(User author) {
         this.author = author;
-        return this;
     }
 
     @JsonGetter(value = "thumbnail")
@@ -103,9 +96,8 @@ public class Post implements Serializable {
         return null;
     }
 
-    public Post setThumbnail(DBFile thumbnail) {
+    public void setThumbnail(DBFile thumbnail) {
         this.thumbnail = thumbnail;
-        return this;
     }
 
     @Override

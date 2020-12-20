@@ -105,12 +105,6 @@ public class DBFile implements Serializable {
                 + id + "]";
     }
 
-    public DBFile(String fileName, String fileType, byte[] file) {
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.file = file;
-    }
-
     public DBFile() {
     }
 }
