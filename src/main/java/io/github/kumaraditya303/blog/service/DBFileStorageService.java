@@ -12,8 +12,11 @@ import io.github.kumaraditya303.blog.repository.DBFileRepository;
 
 @Service
 public class DBFileStorageService {
+    final DBFileRepository dbFileRepository;
     @Autowired
-    DBFileRepository dbFileRepository;
+    public DBFileStorageService(DBFileRepository dbFileRepository) {
+        this.dbFileRepository = dbFileRepository;
+    }
 
     public DBFile store(MultipartFile file) throws IOException {
         if (file != null) {

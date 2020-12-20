@@ -17,8 +17,11 @@ import io.github.kumaraditya303.blog.service.DBFileStorageService;
 @RestController
 public class StaticController {
 
+    private final DBFileStorageService dbFileStorageService;
     @Autowired
-    private DBFileStorageService dbFileStorageService;
+    public StaticController(DBFileStorageService dbFileStorageService) {
+        this.dbFileStorageService = dbFileStorageService;
+    }
 
     @GetMapping(value = "/static/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getStatic(@PathVariable String fileName) {

@@ -1,7 +1,9 @@
 package io.github.kumaraditya303.blog;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import io.github.kumaraditya303.blog.entity.User;
-import io.github.kumaraditya303.blog.repository.DBFileRepository;
 import io.github.kumaraditya303.blog.repository.PostRepository;
 import io.github.kumaraditya303.blog.repository.UserRepository;
 
@@ -38,8 +39,6 @@ public class PostControllerTests {
         @Autowired
         private UserRepository userRepository;
         @Autowired
-        private DBFileRepository dbFileRepository;
-        @Autowired
         private PasswordEncoder encoder;
         @Autowired
         private MockMvc mockMvc;
@@ -48,8 +47,8 @@ public class PostControllerTests {
 
         @BeforeEach
         public void setup() throws Exception {
+                postRepository.deleteAll();
                 userRepository.deleteAll();
-                dbFileRepository.deleteAll();
                 Map<Object, Object> userDto = new HashMap<>();
                 User user = new User();
                 user.setUsername("testinguser");
@@ -108,5 +107,58 @@ public class PostControllerTests {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(content().string(new ObjectMapper()
                                                 .writeValueAsString(postRepository.findAll().get(0))));
+        }
+
+        @Test
+        public void testUpdatePost() throws Exception {
+                Map<Object, Object> postDto = new HashMap<>();
+
+                postDto.put("title", "Test");
+                postDto.put("overview", "Test");
+                postDto.put("content", "Test");
+                postDto.put("featured", true);
+                postDto.put("thumbnail", this.image);
+                this.mockMvc.perform(post("/api/post/create").header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(postDto))).andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(content().string(new ObjectMapper()
+                                                .writeValueAsString(postRepository.findAll().get(0))));
+
+                this.mockMvc.perform(
+                                put("/api/post/100/update").header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token))
+                                .andExpect(status().isBadRequest());
+                postDto.put("title", "Test1");
+                postDto.put("overview", "Test1");
+                postDto.put("content", "Test1");
+                postDto.put("featured", false);
+                postDto.put("thumbnail", this.image);
+                this.mockMvc.perform(put("/api/post/1/update").header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(postDto))).andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(content().string(new ObjectMapper()
+                                                .writeValueAsString(postRepository.findAll().get(0))));
+                System.out.println("Hello");
+        }
+
+        @Test
+        public void testDeletePost() throws Exception {
+                Map<Object, Object> postDto = new HashMap<>();
+                postDto.put("title", "Test");
+                postDto.put("overview", "Test");
+                postDto.put("content", "Test");
+                postDto.put("featured", true);
+                postDto.put("thumbnail", this.image);
+                this.mockMvc.perform(post("/api/post/create").header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(postDto))).andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(content().string(new ObjectMapper()
+                                                .writeValueAsString(postRepository.findAll().get(0))));
+                this.mockMvc.perform(delete("/api/post/100/delete").header(HttpHeaders.AUTHORIZATION,
+                                "Bearer " + this.token)).andExpect(status().isNotFound());
+                this.mockMvc.perform(delete("/api/post/" + postRepository.findAll().get(0).getId() + "/delete")
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token)).andExpect(status().isOk());
         }
 }

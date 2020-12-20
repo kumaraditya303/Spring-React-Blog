@@ -31,7 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 public class User implements UserDetails {
-    private static final long serialVersionUID = -3552717123774480337L;
+    private static final long serialVersionUID = -8935164224252710860L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -159,20 +159,21 @@ public class User implements UserDetails {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((posts == null) ? 0 : posts.hashCode());
         result = prime * result + ((role == null) ? 0 : role.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final User other = (User) obj;
+        User other = (User) obj;
         if (email == null) {
             if (other.email != null)
                 return false;
@@ -202,6 +203,11 @@ public class User implements UserDetails {
             if (other.password != null)
                 return false;
         } else if (!password.equals(other.password))
+            return false;
+        if (posts == null) {
+            if (other.posts != null)
+                return false;
+        } else if (!posts.equals(other.posts))
             return false;
         if (role != other.role)
             return false;

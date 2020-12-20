@@ -1,5 +1,6 @@
 package io.github.kumaraditya303.blog.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,7 +18,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Post {
+public class Post implements Serializable {
+    private static final long serialVersionUID = -8935164224252710860L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,25 +1,36 @@
 package io.github.kumaraditya303.blog;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import io.github.kumaraditya303.blog.entity.User;
+import io.github.kumaraditya303.blog.repository.UserRepository;
 
 @SpringBootApplication
 @EnableJpaRepositories
 public class BlogApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(BlogApplication.class, args);
-	}
+    public BlogApplication(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-	// @PostConstruct
-	// public void initUsers() {
-	// 	List<Role> roles = new ArrayList<>();
-	// 	roles.add(new Role().setRole("USER"));
-	// 	roleRepository.saveAll(roles);
-	// 	List<User> users = Stream
-	// 			.of(new User().setUsername("testinguser").setEmail("test@test.com")
-	// 					.setPassword(passwordEncoder.encode("testinguser")).setRoles(roles))
-	// 			.collect(Collectors.toList());
-	// 	userRepository.saveAll(users);
-	// }
+    public static void main(String[] args) {
+        SpringApplication.run(BlogApplication.class, args);
+    }
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void initUsers() {
+        User user = new User();
+        user.setUsername("testinguser");
+        user.setEmail("test@test.com");
+        user.setPassword(passwordEncoder.encode("testinguser"));
+        userRepository.save(user);
+    }
 }

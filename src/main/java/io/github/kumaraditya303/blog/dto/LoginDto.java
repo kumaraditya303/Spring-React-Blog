@@ -20,11 +20,6 @@ public class LoginDto {
         return password;
     }
 
-    @Override
-    public String toString() {
-        return "LoginDto{" + "username='" + username + '\'' + ", password='" + password + '\'' + '}';
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
