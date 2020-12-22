@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getUser } from "../../utils/utils";
 import { AuthActionType, Dispatch } from "../types/types";
-export const loginUser = (username: string, password: String) => (dispatch: Dispatch) => {
+export const loginUser = (username: string, password: string) => (dispatch: Dispatch) => {
   axios
-    .post("/login", { username, password })
+    .post("/api/login", { username, password })
     .then((res) => {
       const token = res.data.token;
       console.log(token);
@@ -26,7 +26,7 @@ export const registerUser = (
   email: string
 ) => (dispatch: Dispatch) => {
   axios
-    .post("/register", { username, password, firstName, lastName, email })
+    .post("/api/register", { username, password, firstName, lastName, email })
     .then((res) => {
       const token = res.data.token;
       getUser().then((user) => {

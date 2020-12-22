@@ -28,21 +28,20 @@ jobs:
         with:
           path: |
             ~/.m2
-            ~/.npm
-          key: ${{ runner.os }}-${{ hashFiles('**/pom.xml','**/package.json') }}
+          key: ${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}
       - name: Build React
         run: |
           cd client
-          npm ci 
-          npm test
-          npm run build
+          yarn 
+          yarn test
+          yarn build
       - name: Build with Maven
         run: mvn -B package --file pom.xml -DskipTests
       - name: Test with Maven
         run: mvn test
       - name: Build Docker
-        run: |
-          docker build -t spring-react-blog:local .
+        run: docker build -t spring-react-blog:local .
       - name: Upload Coverage Report
+        if: always()
         uses: codecov/codecov-action@v1.0.15

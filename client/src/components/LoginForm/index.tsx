@@ -3,7 +3,6 @@ import { ChangeEvent, Component, FormEvent } from "react";
 import { connect } from "react-redux";
 import { loginUser } from "../../redux/actions/auth";
 import { RootState } from "../../store";
-import styles from "./style.module.scss";
 type State = {
   [x: string]: string;
 };
@@ -27,40 +26,38 @@ class LoginForm extends Component<Props, State> {
   render() {
     const { error } = this.props;
     return (
-      <div className={styles.login__form}>
-        <form onSubmit={this.handleSubmit}>
-          <h1 className="display-1 text-center mb-3">Login</h1>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className={classnames("form-control", { "is-invalid": error?.username })}
-              id="usernameField"
-              name="username"
-              placeholder="username"
-              required
-              // minLength={8}
-              onChange={this.handleChange}
-            />
-            <label htmlFor="usernameField">{error?.username ?? "Username"}</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="password"
-              className={classnames("form-control", { "is-invalid": error?.password })}
-              id="passwordField"
-              placeholder="password"
-              required
-              name="password"
-              // minLength={8}
-              onChange={this.handleChange}
-            />
-            <label htmlFor="passwordField">{error?.password ?? "Password"}</label>
-          </div>
-          <div className="d-grid gap-2">
-            <input type="submit" className="btn btn-primary" value="Login" />
-          </div>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <h1 className="display-1 text-center mb-3">Login</h1>
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            className={classnames("form-control", { "is-invalid": error?.username })}
+            id="usernameField"
+            name="username"
+            placeholder="username"
+            required
+            // minLength={8}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="usernameField">{error?.username ?? "Username"}</label>
+        </div>
+        <div className="form-floating mb-3">
+          <input
+            type="password"
+            className={classnames("form-control", { "is-invalid": error?.password })}
+            id="passwordField"
+            placeholder="password"
+            required
+            name="password"
+            // minLength={8}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="passwordField">{error?.password ?? "Password"}</label>
+        </div>
+        <div className="d-grid gap-2">
+          <input type="submit" className="btn btn-primary" value="Login" />
+        </div>
+      </form>
     );
   }
 }
