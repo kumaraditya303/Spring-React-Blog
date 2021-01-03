@@ -139,7 +139,6 @@ public class PostControllerTests {
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(content().string(new ObjectMapper()
                                                 .writeValueAsString(postRepository.findAll().get(0))));
-                System.out.println("Hello");
         }
 
         @Test
@@ -158,7 +157,7 @@ public class PostControllerTests {
                                                 .writeValueAsString(postRepository.findAll().get(0))));
                 this.mockMvc.perform(delete("/api/post/100/delete").header(HttpHeaders.AUTHORIZATION,
                                 "Bearer " + this.token)).andExpect(status().isNotFound());
-                this.mockMvc.perform(delete("/api/post/" + postRepository.findAll().get(0).getId() + "/delete")
+                this.mockMvc.perform(delete("/api/post/1/delete")
                                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + this.token)).andExpect(status().isOk());
         }
 }

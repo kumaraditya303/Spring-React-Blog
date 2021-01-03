@@ -70,8 +70,8 @@ public class PostController {
                     .collect(toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage)));
             return new ResponseEntity<>(response.getData(), HttpStatus.BAD_REQUEST);
         }
-        if (postRepository.existsById(id) && postRepository.findById(id).get().getAuthor()
-                .getUsername() == ((User) authentication.getPrincipal()).getUsername()) {
+        if (postRepository.existsById(id)
+                && postRepository.findById(id).get().getAuthor().getId() == ((User) authentication.getPrincipal()).getId()) {
             Post post = postRepository.findById(id).get();
             post.setTitle(postDto.getTitle());
             post.setOverview(postDto.getOverview());
@@ -85,8 +85,8 @@ public class PostController {
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<Object> deletePost(@PathVariable Long id, Authentication authentication) {
-        if (postRepository.existsById(id) && postRepository.findById(id).get().getAuthor()
-                .getUsername() == ((User) authentication.getPrincipal()).getUsername()) {
+        if (postRepository.existsById(id)
+                && postRepository.findById(id).get().getAuthor().getId() == ((User) authentication.getPrincipal()).getId()) {
             postRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
